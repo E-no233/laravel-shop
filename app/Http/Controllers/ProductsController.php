@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
+    /**
+     * 列表页
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         // 创建一个查询构造器
@@ -51,6 +56,7 @@ class ProductsController extends Controller
     }
 
     /**
+     * 详情页
      * @param Product $product
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -59,10 +65,45 @@ class ProductsController extends Controller
     public function show(Product $product, Request $request)
     {
         // 判断商品是否已经上架，如果没有上架则抛出异常
-        if(!$product->on_sale){
+        if (!$product->on_sale) {
             throw new InvalidRequestException('商品未上架');
         }
 
-        return view('products.show',['product'=>$product]);
+        $favored = false;
+        if ($user = $request->user()) {
+            $favored = boolval($user->favoriteProducts()->find($product->id));
+        }
+
+        return view('products.show', ['product' => $product, 'favored' => $favored]);
+    }
+
+    /**
+     * 收藏
+     * @param Product $product
+     * @param Request $request
+     * @return array
+     */
+    public function favor(Product $product, Request $request)
+    {
+        $user = $request->user();
+        if ($user->favoriteProducts()->find($product->id)) {
+            return [];
+        }
+
+        $user->favoriteProducts()->attach($product);
+        return [];
+    }
+
+    /**
+     * 取消收藏
+     * @param Product $product
+     * @param Request $request
+     * @return array
+     */
+    public function disfavor(Product $product, Request $request)
+    {
+        $user = $request->user();
+        $user->favoriteProducts()->detach($product);
+        return [];
     }
 }
