@@ -33,6 +33,10 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\CartItem[] $cartItems
+ * @property-read int|null $cart_items_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $favoriteProducts
+ * @property-read int|null $favorite_products_count
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -75,5 +79,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Product::class,'user_favorite_products')
             ->withTimestamps()
             ->orderBy('user_favorite_products.created_at', 'desc');
+    }
+
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
     }
 }

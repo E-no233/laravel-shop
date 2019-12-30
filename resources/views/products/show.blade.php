@@ -85,6 +85,38 @@
                 $('.product-info .price span').text($(this).data('price'));
                 $('.product-info .stock').text('库存：' + $(this).data('stock') + '件');
             });
+            $('.btn-add-to-cart').click(function (){
+
+                // 请求加入购物车接口
+                axios.post('{{route('cart.add')}}',{
+                    skuId: $('label.active input[name=skus]').val(),
+                    amount: $('.cart_amount input').val()
+                }).then(function (){
+                    swal('加入购物车成功','success')
+                },function(error){
+                    if (error.response.status === 401) {
+
+                        // http 状态码为 401 代表用户未登陆
+                        swal('请先登录', '', 'error');
+
+                    } else if (error.response.status === 422) {
+
+                        // http 状态码为 422 代表用户输入校验失败
+                        var html = '<div>';
+                        _.each(error.response.data.errors, function (errors) {
+                            _.each(errors, function (error) {
+                                html += error+'<br>';
+                            })
+                        });
+                        html += '</div>';
+                        swal({content: $(html)[0], icon: 'error'})
+                    } else {
+
+                        // 其他情况应该是系统挂了
+                        swal('系统错误', '', 'error');
+                    }
+                })
+            })
         });
         // 监听收藏按钮的点击事件
         $('.btn-favor').click(function () {
