@@ -10,13 +10,20 @@ use App\Models\ProductSku;
 use App\Models\UserAddress;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Throwable;
 
 class OrdersController extends Controller
 {
+    /**
+     * @param OrderRequest $request
+     * @return mixed
+     * @throws Throwable
+     */
     public function store(OrderRequest $request)
     {
-        $user  = $request->user();
-        $order = DB::transaction(function () use ($user, $request) {
+        $user = $request->user();
+        return DB::transaction(function () use ($user, $request) {
             $address = UserAddress::find($request->input('address_id'));
             // 更新此地址的最后使用时间
             $address->update(['last_used_at' => Carbon::now()]);
@@ -63,10 +70,20 @@ class OrdersController extends Controller
             $user->cartItems()->whereIn('product_sku_id', $skuIds)->delete();
 
             // 设置延迟任务
-            $this->dispatch(new CloseOrder($order,config('app.order_ttl')));
+            $this->dispatch(new CloseOrder($order, config('app.order_ttl')));
 
             return $order;
         });
-        return $order;
+    }
+
+    public function index(Request $request)
+    {
+        $orders = Order::query()
+            ->with(['items.product', 'items.productSku'])
+            ->where('user_id', $request->user()->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate();
+
+        return view('orders.index', ['orders' => $orders]);
     }
 }
