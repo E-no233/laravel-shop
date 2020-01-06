@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
+use App\Models\Order;
 use App\Models\User;
-use App\Models\UserAddress;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserAddressPolicy
+class OrderPolicy
 {
     use HandlesAuthorization;
 
@@ -17,11 +17,11 @@ class UserAddressPolicy
      */
     public function __construct()
     {
-        //
+
     }
 
-    public function own(User $user,UserAddress $address)
+    public function own(User $user,Order $order)
     {
-        return $address->user_id === $user->id;
+        return $order->user_id === $user->id;
     }
 }
