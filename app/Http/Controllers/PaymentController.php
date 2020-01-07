@@ -72,4 +72,9 @@ class PaymentController extends Controller
 
         return app('alipay')->success();
     }
+
+    protected function afterPaid(Order $order)
+    {
+        event(new OrderPaid($order));
+    }
 }
