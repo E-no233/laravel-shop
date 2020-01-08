@@ -5,6 +5,41 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
+/**
+ * App\Models\CouponCode
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $code
+ * @property string $type
+ * @property float $value
+ * @property int $total
+ * @property int $used
+ * @property float $min_amount
+ * @property \Illuminate\Support\Carbon|null $not_before
+ * @property \Illuminate\Support\Carbon|null $not_after
+ * @property bool $enabled
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $description
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereEnabled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereMinAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereNotAfter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereNotBefore($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereUsed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\CouponCode whereValue($value)
+ * @mixin \Eloquent
+ */
 class CouponCode extends Model
 {
     // 用常量的方式定义支持的优惠券类型
